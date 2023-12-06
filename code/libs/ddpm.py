@@ -117,8 +117,8 @@ class DDPM(nn.Module):
         """
         Fill in the missing code here. See Equation 4 in the paper.
         """
-        # x_t =
-        # return x_t
+        x_t = sqrt_alphas_cumprod_t * x_start + sqrt_one_minus_alphas_cumprod_t * noise
+        return x_t
 
     # compute the simplified loss
     def compute_loss(self, x_start, label, t, noise=None):
@@ -129,7 +129,11 @@ class DDPM(nn.Module):
         if noise is None:
             noise = torch.randn_like(x_start)
 
-        # return loss
+        x_t = self.q_sample(x_start, t, noise)
+        e_t = self.model(x_t, label, t)
+        # loss = torch.norm(noise - e_t, p=2) ** 2
+        loss = F.mse_loss(e_t, noise)
+        return loss
 
     # sampling using the denosing process (single step)
     @torch.no_grad()
@@ -147,7 +151,8 @@ class DDPM(nn.Module):
         """
         Fill in the missing code here. See Equation 11 in the paper.
         """
-        # model_mean =
+        denoise = betas_t / sqrt_one_minus_alphas_cumprod_t * self.model(x, label, t)
+        model_mean = 1 / sqrt_recip_alphas_t * (x - denoise)
 
         if t_index == 0:
             return model_mean

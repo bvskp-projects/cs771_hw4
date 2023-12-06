@@ -1,0 +1,12 @@
+{'dataset': {'data_folder': '../data', 'name': 'MNIST', 'split': 'train'},
+ 'devices': ['cuda:0'],
+ 'loader': {'batch_size': 64, 'num_workers': 2},
+ 'model': {'context_dim': 64,
+           'dim': 64,
+           'dim_mults': (1, 2, 4),
+           'img_shape': [1, 28, 28],
+           'num_classes': 10,
+           'timesteps': 500},
+ 'model_name': 'DDPM',
+ 'output_folder': '../logs',
+ 'train_cfg': {'epochs': 30, 'lr': 0.0002, 'num_eval_samples': 10}}

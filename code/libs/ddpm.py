@@ -131,7 +131,6 @@ class DDPM(nn.Module):
 
         x_t = self.q_sample(x_start, t, noise)
         e_t = self.model(x_t, label, t)
-        # loss = torch.norm(noise - e_t, p=2) ** 2
         loss = F.mse_loss(e_t, noise)
         return loss
 
